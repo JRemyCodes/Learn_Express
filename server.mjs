@@ -24,7 +24,12 @@ app.get("/api/users", (req, res) => {
 });
 
 app.get("/api/users/:id", (req, res) => {
-    console.log(req.params.id);
+    const parsedId = parseInt(req.params.id);
+    if(isNaN(parsedId)) res.status(400).send({msg: "Bad Request: Invalid Id."});
+
+    const findUser = users.find((user) => user.id === parsedId);
+    if(!findUser) return res.status(404).send("Id (number) not found.");
+    return res.send(findUser);
 });
 
 app.listen(port, () => {
